@@ -1,0 +1,14 @@
+{
+  "name": "number-guesser",
+  "version": "1.0.0",
+  "private": true,
+  "description": "trains a neural network and saves model to a JSON file",
+  "main": "training.js",
+  "scripts": {
+    "start": "serve docs",
+    "train": "node training.js"
+  },
+  "dependencies": {
+    "mnist": "^1.1.0"
+  }
+}
