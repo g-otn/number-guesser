@@ -1,75 +1,70 @@
-// Simple three.js example
+/*
+  Global variables to access libraries:
+  THREE, CameraControls, mnist
+*/
+(() => {
 
-import * as THREE from "https://unpkg.com/three@0.118.3/build/three.module.js";
-// import { OrbitControls } from "https://unpkg.com/three@0.118.3/examples/jsm/controls/OrbitControls.js";
-import CameraControls from 'https://unpkg.com/camera-controls/dist/camera-controls.module.js';
+  function Visualizer(element) {
 
-var mesh, renderer, scene, camera, controls,
-  clock, cameraControls;
+    this.init = () => {
+      const width = window.innerWidth, height = window.innerHeight;
+    
+      // renderer
+      this.renderer = new THREE.WebGLRenderer();
+      this.renderer.setSize(width, height);
+      this.renderer.setPixelRatio(window.devicePixelRatio);
+      element.appendChild(this.renderer.domElement);
+    
+      // Scene
+      this.scene = new THREE.Scene();
+    
+      // Camera
+      this.camera = new THREE.PerspectiveCamera( 40, width / height, 1, 10000 );
+      this.camera.position.set( 20, 20, 20 );
+    
+      // Controls
+      CameraControls.install({ THREE: THREE });
+      this.clock = new THREE.Clock();
+      this.camera = new THREE.PerspectiveCamera(40, width / height, 1, 10000);
+      this.camera.position.set(20, 20, 20);
+      this.cameraControls = new CameraControls(this.camera, this.renderer.domElement);
+    
+      // Ambient light
+      this.scene.add(new THREE.AmbientLight(0x555555));
+      // Directional light
+      var light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(20, 20, 0);
+      this.scene.add(light);
+    
+      // Axes
+      this.scene.add(new THREE.AxesHelper(200));
+    
+      // Geometry
+      var geometry = new THREE.SphereGeometry(1, 20, 10);
+      // material
+      var material = new THREE.MeshPhongMaterial({
+        color: 0x33bbff,
+        flatShading: true,
+        transparent: true,
+        opacity: 0.7,
+      });
+      // Mesh
+      mesh = new THREE.Mesh(geometry, material);
+      this.scene.add(mesh);
+    }
 
-init();
-animate();
+    this.animate = () => {
+      const delta = this.clock.getDelta();
+      const hasControlsUpdated = this.cameraControls.update(delta);
+      requestAnimationFrame(this.animate);
 
-function init() {
-  const width = window.innerWidth, height = window.innerHeight;
+      // you can skip this condition to render though
+      // if (hasControlsUpdated) { renderer.render(scene, camera);}
+      this.renderer.render(this.scene, this.camera);
+    }
 
-  // renderer
-  renderer = new THREE.WebGLRenderer();
-  renderer.setSize(width, height);
-  renderer.setPixelRatio(window.devicePixelRatio);
-  document.body.appendChild(renderer.domElement);
+  }
 
-  // scene
-  scene = new THREE.Scene();
+  window.Visualizer = Visualizer;
 
-  // camera
-  camera = new THREE.PerspectiveCamera( 40, width / height, 1, 10000 );
-  camera.position.set( 20, 20, 20 );
-
-  CameraControls.install({ THREE: THREE });
-  clock = new THREE.Clock();
-  camera = new THREE.PerspectiveCamera(40, width / height, 1, 10000);
-  camera.position.set(20, 20, 20);
-  cameraControls = new CameraControls(camera, renderer.domElement);
-
-  // controls
-  // controls = new OrbitControls(camera, renderer.domElement);
-
-  // ambient
-  scene.add(new THREE.AmbientLight(0x222222));
-
-  // light
-  var light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(20, 20, 0);
-  scene.add(light);
-
-  // axes
-  scene.add(new THREE.AxesHelper(20));
-
-  // geometry
-  var geometry = new THREE.SphereGeometry(5, 12, 8);
-
-  // material
-  var material = new THREE.MeshPhongMaterial({
-    color: 0x00ffff,
-    flatShading: true,
-    transparent: true,
-    opacity: 0.7,
-  });
-
-  // mesh
-  mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
-
-}
-
-function animate() {
-  const delta = clock.getDelta();
-  const hasControlsUpdated = cameraControls.update(delta);
-  requestAnimationFrame(animate);
-
-  // you can skip this condition to render though
-  // if (hasControlsUpdated) { renderer.render(scene, camera);}
-    renderer.render(scene, camera);
-
-}
+})();
