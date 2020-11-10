@@ -1,12 +1,12 @@
-const mnist = require('mnist');
+const MNIST = require('./node_modules/mnist/src/mnist');
 const brain = require('brain.js');
 const fs = require('fs');
 
 
 // Get training data
-const set = mnist.set(8000, 2000); // get all 10000 available mnist digits in the mnist package
+const set = MNIST.set(45000, 15000); // Get 60000 digits
+// const set = MNIST.set(8000, 2000);
 const trainingData = [...set.training, ...set.test]; // No test is being made (not using brain.CrossValidation), so we can use the training and test sets as training data
-console.log(trainingData.every(s => s.input && s.output))
 
 
 // Structure and create neural network
@@ -17,9 +17,8 @@ const net = new brain.NeuralNetwork({
 
 
 // Train network with MNIST digits
-console.log('Training...')
+console.log('Training with', trainingData.length, 'images');
 net.train(trainingData, {
-  iterations: 20,
   log: true,
   logPeriod: 1
 });
