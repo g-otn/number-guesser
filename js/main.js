@@ -24,7 +24,7 @@
       columns: 28,
       rows: 28,
       cellSize: 14,
-      brushWidth: 23,
+      brushWidth: 20,
       onBegin: e => { digitPad.clear(); },
       onStroke: e => {
         const grid = digitPad.getGrid()
