@@ -10,31 +10,57 @@
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js" integrity="sha256-wNhWj+b52Df2ZAAPGXPyIAnXdqq7Sb1tr2kpEoJfbig=" crossorigin="anonymous"></script>
 
   <!-- Styles -->
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
   
   <link rel="stylesheet" href="style.css">
   <!-- /Styles -->
 </head>
 
 <body>
-  <div id="digit" class="digit-pad"></div>
-  <div id="digit2"  class="digit-pad"></div>
-  <pre id="test"></pre>
-  <div class="visualizer-container">
-    <div id="visualizer" class="visualizer"></div>
+  <div class="container-fluid p-5">
+
+  
+    <div class="row">
+      <div class="col col-12">
+        <div id="digit" class="digit-pad"></div>
+        <div id="gridDisplay" class="digit-pad"></div>
+        <div id="visualizationGrids"></div>
+      </div>
+      <div class="col col-12">
+      </div>
+      <div class="col col-3">
+        <pre id="test"></pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-12">
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-12">
+        <div class="visualizer-container">
+          <div id="visualizer" class="visualizer"></div>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 
 </body>
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script> -->
-
-<script src="https://cdn.jsdelivr.net/npm/brain.js@2.0.0-beta.2/dist/brain-browser.min.js" integrity="sha256-l+KhQGCXrDUmelcDaQDDJ5zEOjl8X9Q/fGtHKu/jq7A=" crossorigin="anonymous"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/mnist@1.1.0/dist/mnist.js" integrity="sha256-G2N+7FT30MilYlO7mRokcVQVKAxat/GMQA5aa1/RJ38=" crossorigin="anonymous"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@3.0.0-beta.4/dist/signature_pad.umd.min.js" integrity="sha256-XEJuxxEh99IMbq0rzl1zKwjjfYc/nrkRgKjWM6bSwuU=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/camera-controls@1.25.1/dist/camera-controls.min.js" integrity="sha256-FzFMAHQ+VdCwhC2WnSTFy4XGzItyc/nM9msscn+vlr0=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.122.0/build/three.min.js" integrity="sha256-zWTNhN/MLQqRx/eQRRsUkOd1mY7NIfaq4hizzyU9/gM=" crossorigin="anonymous"></script>
+
+<!-- Modified version of brain-browser.js -->
+<!-- <script src="js/vendors/brain.js@2.0.0-beta.2/dist/brain-browser.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/brain.js@2.0.0-beta.2/dist/brain-browser.min.js" integrity="sha256-l+KhQGCXrDUmelcDaQDDJ5zEOjl8X9Q/fGtHKu/jq7A=" crossorigin="anonymous"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/mnist@1.1.0/dist/mnist.js" integrity="sha256-G2N+7FT30MilYlO7mRokcVQVKAxat/GMQA5aa1/RJ38=" crossorigin="anonymous"></script> -->
 
 <script src="js/digitPad.js"></script>
 <script src="js/visualizer.js"></script>

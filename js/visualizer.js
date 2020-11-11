@@ -55,7 +55,6 @@
       // Mesh
       mesh = new THREE.Mesh(geometry, material);
       this.scene.add(mesh);
-      console.log(this.renderer.domElement)
 
       // On click event
       this.renderer.domElement.addEventListener('click', e => {

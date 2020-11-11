@@ -1,17 +1,48 @@
 body {
   background-color: rgb(5, 5, 5);
+}
+
+p, span, pre, h1, h2, h3, h4, h5, h6 {
   color: white;
-  min-width: 350px;
 }
 
 .digit-pad {
-  display: inline;
+  display: inline-block;
   /* z-index: 5; */
 }
 
 .digit-pad canvas {
+  display: block;
   background-color: black;
   border: 5px solid white;
+}
+
+#digitPad {
+  min-width: 300px;
+  min-height: 300px;
+}
+
+#gridDisplay canvas {
+  border: 5px solid grey;
+}
+
+#visualizationGrids {
+  display: inline-block;
+  width: 290px;
+  height: 290px;
+  padding: 8px;
+  line-height: 0;
+  /* text-align: center; */
+}
+
+#visualizationGrids .digit-pad {
+  display: inline-block;
+  margin: 3px;
+}
+
+#visualizationGrids .digit-pad canvas {
+  border: 2px solid grey;
+  /* margin: 2px; */
 }
 
 /* visualizer with aspect ratio size */
@@ -44,5 +75,5 @@ body {
 }
 
 #test {
-  font-size: x-large;
+  /* font-size: x-large; */
 }
