@@ -7,7 +7,8 @@
   "scripts": {
     "postinstall": "node load_digits.js && node ./node_modules/mnist_dl/mnist_dl.js && node load_digits2.js",
     "start": "node train.js",
-    "serve": "serve ../client"
+    "serve": "serve ../client",
+    "gh-pages:deploy": "git subtree --prefix client push origin gh-pages"
   },
   "dependencies": {
     "brain.js": "^2.0.0-beta.2",
