@@ -1,7 +1,7 @@
 # number-guesser
 
 This repo holds the code to train a simple digit recognizing MLP neural network
-using [the MNIST database](http://yann.lecun.com/exdb/mnist/) and also a website which allows the user to draw digits and visualize
+using [the MNIST database](http://yann.lecun.com/exdb/mnist/) and also [a website](https://g-otn.github.io/number-guesser) which allows the user to draw digits and visualize
 the neural network prediction of the drawings.
 
 ## Installation
