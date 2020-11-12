@@ -17,6 +17,33 @@
     });
   }
 
+  // https://stackoverflow.com/a/4492417/11138267
+  function listToMatrix(list, elementsPerSubArray) {
+    var matrix = [], i, k;
+
+    for (i = 0, k = -1; i < list.length; i++) {
+        if (i % elementsPerSubArray === 0) {
+            k++;
+            matrix[k] = [];
+        }
+
+        matrix[k].push(list[i]);
+    }
+
+    return matrix;
+}
+
+  function getGridFromFirstHiddenLayerNode(node) {
+    const rows = [];
+    const weights = Object.values(node.weights);
+    let t = listToMatrix(weights, 28);
+    // for (let weightIndex = 0; weightIndex < weights.length; weightIndex++) {
+    //   rows.push(listToMatrix)
+    // }
+    return t;
+  }
+  
+
   function getGridFromNode(node) {
     // const rows = [];
     // for (let i = 0; i < node.weights.length)
@@ -24,14 +51,6 @@
 
   function showOutput(output) { // Display output layer values
     console.log('Showing output', output)
-    // let test = {};
-    // for (let key in output) {
-    //   if (output.hasOwnProperty(key)) {
-    //     test[key] = Math.floor(output[key] * 10000) / 100; // round percentages
-    //     test[key] += '%'
-    //   }
-    // }
-    // $('#test').text(JSON.stringify(test, null, '\t'));
     $('#test').html('')
     // const result = $('<div></div>');
     output.forEach((v, i) => {
@@ -60,13 +79,15 @@
 
 
     // Initialize first hidden layer visualization grids
-    for (let node = 0; node < model.sizes[1]; node++) {
+    for (let nodeIndex = 0; nodeIndex < model.sizes[1]; nodeIndex++) {
       $('#visualizationGrids').append('<div class="digit-pad"></div>');
-      
-      const $padContainer = $('#visualizationGrids .digit-pad')[node];
-      
-      const pad = createVisualizationDigitPad($padContainer, model.layers[1][node]);
+
+      const $padContainer = $('#visualizationGrids .digit-pad')[nodeIndex];
+      const pad = createVisualizationDigitPad($padContainer);
       pad.init();
+      
+      const node = model.layers[1][nodeIndex];
+      pad.drawGrid(getGridFromFirstHiddenLayerNode(node));
       
     }
 
@@ -76,7 +97,7 @@
       columns: 28,
       rows: 28,
       cellSize: 10,
-      brushWidth: 15,
+      brushWidth: 14,
       onBegin: e => { digitPad.clear(); },
       onStroke: e => {
         // Draw grid in digitPad (pixelated mirror of #digit)

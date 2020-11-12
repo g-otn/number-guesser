@@ -64,17 +64,17 @@
         this.raycaster.setFromCamera(this.mouse, this.camera);
 
         const intersects = this.raycaster.intersectObjects(this.scene.children);
-        console.log('Click at', this.mouse, 'intersections:', intersects);
+        // console.log('Mouse at', this.mouse, 'intersections:', intersects);
 
-        // Test (draw line)
         if (intersects.length > 0) {
+          console.log('Intersection at', this.mouse, intersects[0]);
+
+          // Test (draw line)
           const material = new THREE.LineBasicMaterial( { color: 0x00ccff } );
-          
           const geometry = new THREE.BufferGeometry().setFromPoints([
             this.raycaster.ray.origin,
             intersects[0].point
           ]);
-  
           const line = new THREE.Line( geometry, material );
           this.scene.add( line );
         }
