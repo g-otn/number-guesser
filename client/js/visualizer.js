@@ -56,8 +56,8 @@
       mesh = new THREE.Mesh(geometry, material);
       this.scene.add(mesh);
 
-      // On click event
-      this.renderer.domElement.addEventListener('click', e => {
+      // Mouse interaction
+      this.renderer.domElement.addEventListener('mousemove', e => {
         this.mouse.x = ((e.clientX - $element.offset().left) / this.renderer.domElement.clientWidth) * 2 - 1;
         this.mouse.y = - ((e.clientY - $element.offset().top) / this.renderer.domElement.clientHeight) * 2 + 1;
 

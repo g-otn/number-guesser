@@ -22,14 +22,29 @@
   
     <div class="row">
       <div class="col col-12">
-        <div id="digit" class="digit-pad"></div>
-        <div id="gridDisplay" class="digit-pad"></div>
-        <div id="visualizationGrids"></div>
-      </div>
-      <div class="col col-12">
-      </div>
-      <div class="col col-3">
-        <pre id="test"></pre>
+        <div class="row">
+          
+        </div>
+        <div class="d-inline-block">
+          <h4>Digit</h4>
+          <div id="digit" class="digit-pad"></div>
+        </div>
+        <div class="d-inline-block">
+          <h4>Input layer</h4>
+          <div id="gridDisplay" class="digit-pad"></div>
+        </div>
+        <div class="d-inline-block ml-3">
+          <h4 class="d-block">Output layer</h4>
+          <div id="output">
+            <p id="test"></p>
+          </div>
+        </div>
+        <div class="d-inline-block">
+          <h5 class="d-block">First hidden layer weights</h5>
+          <div class="d-flex justify-content-center">
+            <div id="visualizationGrids"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -49,6 +64,23 @@
   </div>
 
 </body>
+
+<template id="layerTtemplate">
+  <div class="d-block">
+    <h5 class="d-block">2 hidden layer weights</h5>
+    <div class="d-flex justify-content-center">
+    </div>
+  </div>
+</template>
+
+<template id="outputTemplate">
+  <span></span>
+  <div class="d-inline">
+    <!-- <div class="d-inline" style="width: 10px;">
+    </div> -->
+  </div>
+</template>
+
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

@@ -26,6 +26,7 @@
           onBegin: o.onBegin,
           onEnd: o.onStroke
         });
+        this.canvas.style.cursor = 'crosshair';
       }
 
     };

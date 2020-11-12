@@ -11,7 +11,6 @@ const trainingData = [...set.training, ...set.test]; // brain.CrossValidation wi
 
 // Structure and create neural network
 const netOptions = {
-  iterations: 20000,
   hiddenLayers: [16, 16],
   activation: 'sigmoid'
 };
@@ -22,7 +21,7 @@ const crossValidate = new brain.CrossValidate(brain.NeuralNetwork, netOptions);
 // Train neural network with MNIST digits
 console.log('Training with', trainingData.length, 'images');
 crossValidate.train(trainingData, {
-  learningRate: 0.1,
+  iterations: 20000,
   log: true,
   logPeriod: 1
 });
