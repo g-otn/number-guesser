@@ -26,11 +26,18 @@ p, span, pre, h1, h2, h3, h4, h5, h6 {
   border: 5px solid grey;
 }
 
+#output {
+  /* height: 290px; */
+}
+
+#test {
+  font-size: large;
+  margin-bottom: 0;
+}
+
 #visualizationGrids {
   display: inline-block;
-  width: 290px;
-  height: 290px;
-  padding: 8px;
+  /* padding: 8px; */
   line-height: 0;
   /* text-align: center; */
 }
@@ -72,8 +79,4 @@ p, span, pre, h1, h2, h3, h4, h5, h6 {
 .visualizer {
   width: 100%;
   height: 100%;
-}
-
-#test {
-  /* font-size: x-large; */
 }
