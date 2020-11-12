@@ -97,6 +97,20 @@
         }
       }
     }
+
+    this.drawGridColor = (rows = this.getRowValues(), colorPositive = [0, 204, 0], colorNegative = [204, 0, 0]) => {
+      this.clear();
+
+      // Draw each cell with grey color
+      for (let y = 0; y < o.rows; y++) {
+        for (let x = 0; x < o.columns; x++) {
+          let value = rows[y][x];
+          let color = value > 0 ? colorPositive : colorNegative; 
+          this.ctx.fillStyle = `rgba(${color[0] * 255}, ${color[1] * 255}, ${color[2] * 255}, ${Math.abs(value)})`;
+          this.ctx.fillRect(x * o.cellSize, y * o.cellSize, o.cellSize, o.cellSize);
+        }
+      }
+    }
   }
 
   window.DigitPad = DigitPad;

@@ -12,7 +12,7 @@
     return new DigitPad($element, {
       columns: 28,
       rows: 28,
-      cellSize: 2.75,
+      cellSize: 4,
       disablePad: true
     });
   }
@@ -34,13 +34,11 @@
 }
 
   function getGridFromFirstHiddenLayerNode(node) {
-    const rows = [];
     const weights = Object.values(node.weights);
-    let t = listToMatrix(weights, 28);
     // for (let weightIndex = 0; weightIndex < weights.length; weightIndex++) {
-    //   rows.push(listToMatrix)
+    //   weights[weightIndex] = 1 / (1 + Math.exp(-weights[weightIndex]));
     // }
-    return t;
+    return listToMatrix(weights, 28);
   }
   
 
@@ -87,7 +85,7 @@
       pad.init();
       
       const node = model.layers[1][nodeIndex];
-      pad.drawGrid(getGridFromFirstHiddenLayerNode(node));
+      pad.drawGridColor(getGridFromFirstHiddenLayerNode(node));
       
     }
 
