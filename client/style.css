@@ -80,3 +80,9 @@ p, span, pre, h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: 100%;
 }
+
+#githubLink {
+  position: fixed;
+  top: 5px;
+  left: 10px;
+}
