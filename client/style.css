@@ -7,6 +7,10 @@ p, span, pre, h1, h2, h3, h4, h5, h6 {
   user-select: none;
 }
 
+hr {
+  background-color: white;
+}
+
 .digit-pad {
   display: inline-block;
   /* z-index: 5; */
