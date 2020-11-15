@@ -12,7 +12,7 @@
     return new DigitPad($element, {
       columns: 28,
       rows: 28,
-      cellSize: 4,
+      cellSize: 3,
       disablePad: true
     });
   }
