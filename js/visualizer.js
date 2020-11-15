@@ -52,9 +52,18 @@
         transparent: true,
         opacity: 0.7,
       });
-      // Mesh
+      // testMesh
       mesh = new THREE.Mesh(geometry, material);
       this.scene.add(mesh);
+
+
+      // Input layer meshes
+      for (let i = 0; i < 28; i++) {
+        const inputGeometry = new THREE.PlaneBufferGeometry(10, 10);
+        
+      }
+
+
 
       // Mouse interaction
       this.renderer.domElement.addEventListener('mousemove', e => {
@@ -64,7 +73,7 @@
         this.raycaster.setFromCamera(this.mouse, this.camera);
 
         const intersects = this.raycaster.intersectObjects(this.scene.children);
-        // console.log('Mouse at', this.mouse, 'intersections:', intersects);
+        console.log('Mouse at', this.mouse, 'intersections:', intersects);
 
         if (intersects.length > 0) {
           console.log('Intersection at', this.mouse, intersects[0]);
@@ -89,6 +98,10 @@
       // you can skip this condition to render though
       // if (hasControlsUpdated) { renderer.render(scene, camera);}
       this.renderer.render(this.scene, this.camera);
+    }
+
+    this.updateInput = (grid) => {
+
     }
   }
 
