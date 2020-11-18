@@ -4,10 +4,6 @@
     return grid.flat(1); // Transforms matrice in array
   }
 
-  function formatPrediction(prediciton) {
-
-  }
-
   function createVisualizationDigitPad($element) {
     return new DigitPad($element, {
       columns: 28,
@@ -20,18 +16,15 @@
   // https://stackoverflow.com/a/4492417/11138267
   function listToMatrix(list, elementsPerSubArray) {
     var matrix = [], i, k;
-
     for (i = 0, k = -1; i < list.length; i++) {
         if (i % elementsPerSubArray === 0) {
             k++;
             matrix[k] = [];
         }
-
         matrix[k].push(list[i]);
     }
-
     return matrix;
-}
+  }
 
   function getGridFromFirstHiddenLayerNode(node) {
     const weights = Object.values(node.weights);
@@ -92,17 +85,17 @@
       columns: 28,
       rows: 28,
       cellSize: 8,
-      brushWidth: 14,
+      brushWidth: 12,
       onBegin: e => { digitPad.clear(); },
       onStroke: e => {
         // Draw grid in digitPad (pixelated mirror of #digit)
-        const grid = digitPad.getGrid()
+        const grid = digitPad.getCenteredPositiveGrid(); // digitPad.getGrid();
         gridDisplay.drawGrid(grid);
         
         // Get input for neural network
         const input = getInputFromGrid(grid);
 
-        // Predict
+        // Get prediction from neural network
         const prediction = net.run(input);
         console.info('Prediction:', prediction);
 

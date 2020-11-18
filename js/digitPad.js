@@ -6,7 +6,7 @@
     const height = o.rows * o.cellSize;
 
     this.init = () => {
-      console.log('Initalizing digit display at', $element, 'with options:', options);
+      // console.log('Initalizing digit display at', $element, 'with options:', options);
       // Init canvas
       this.canvas = document.createElement('canvas');
       this.canvas.width = width;
@@ -86,30 +86,81 @@
       }
     }
 
-    this.drawGrid = (rows = this.getRowValues()) => {
+    this.drawGrid = (rows = this.getGrid()) => {
       this.clear();
 
       // Draw each cell with grey color
       for (let y = 0; y < o.rows; y++) {
         for (let x = 0; x < o.columns; x++) {
-          this.ctx.fillStyle = `rgb(${rows[y][x] * 255}, ${rows[y][x] * 255}, ${rows[y][x] * 255})`;
+          const value = rows[y][x] || 0;
+          this.ctx.fillStyle = `rgb(${value * 255}, ${value * 255}, ${value * 255})`;
           this.ctx.fillRect(x * o.cellSize, y * o.cellSize, o.cellSize, o.cellSize);
         }
       }
     }
 
-    this.drawGridColor = (rows = this.getRowValues(), colorPositive = [0, 204, 0], colorNegative = [204, 0, 0]) => {
+    this.drawGridColor = (rows = this.getGrid(), colorPositive = [0, 204, 0], colorNegative = [204, 0, 0]) => {
       this.clear();
 
       // Draw each cell with grey color
       for (let y = 0; y < o.rows; y++) {
         for (let x = 0; x < o.columns; x++) {
-          let value = rows[y][x];
+          let value = rows[y][x] || 0;
           let color = value > 0 ? colorPositive : colorNegative; 
           this.ctx.fillStyle = `rgba(${color[0] * 255}, ${color[1] * 255}, ${color[2] * 255}, ${Math.abs(value)})`;
           this.ctx.fillRect(x * o.cellSize, y * o.cellSize, o.cellSize, o.cellSize);
         }
       }
+    }
+
+    // Centers drawing in canvas (calculate grid values only, no ctx manipulation)
+    // (Checks the 'corners' of the drawing and moves the values towards the middle of the grid)
+    this.getCenteredPositiveGrid = (rows = this.getGrid()) => {
+      // console.log('rows:', rows)
+
+      // Calulate corners
+      let top = o.rows - 1, bottom = 0, left = o.columns - 1, right = 0;
+      for (let y = 0; y < o.rows; y++) {
+        for (let x = 0; x < o.columns; x++) {
+          let value = rows[y][x];
+          if (value > 0) {
+            if (y < top) top = y;
+            if (y > bottom) bottom = y;
+            if (x < left) left = x;
+            if (x > right) right = x;
+          }
+        }
+      }
+      // console.log('Corners:', top, bottom, left, right);
+      
+
+      const drawingWidth = right - left, drawingHeight = bottom - top;
+
+      
+      // Calculate starting position
+      const centerTopLeft = { // position of the drawing most top-left pixel in the whole canvas
+        x: Math.floor((o.columns - 1) / 2) - Math.floor(drawingWidth / 2),
+        y: Math.floor((o.rows - 1) / 2) - Math.floor(drawingHeight / 2)
+      }
+      // console.log('centerTopLeft:', centerTopLeft);
+
+
+      // 'Move' grid values to its center
+      const rowsWithCenteredDrawing = [];
+      for (let y = 0; y < o.rows; y++) {
+        rowsWithCenteredDrawing[y] = [];
+        for (let x = 0; x < o.columns; x++) {
+          rowsWithCenteredDrawing[y][x] = 0;  // Initialize matrice (undefined & NaN values don't work well with the neural network)
+        }
+      }
+      for (let y = centerTopLeft.y; y < centerTopLeft.y + drawingHeight + 1; y++) {
+        for (let x = centerTopLeft.x; x < centerTopLeft.x + drawingWidth + 1; x++) {
+          rowsWithCenteredDrawing[y][x] = rows[top + (y - centerTopLeft.y)][left + (x - centerTopLeft.x)]; // 'Draw' drawing at center
+        }
+      }
+
+      // console.log('rowsWithCenteredDrawing:', rowsWithCenteredDrawing)
+      return rowsWithCenteredDrawing;
     }
   }
 
