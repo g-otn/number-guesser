@@ -35,16 +35,13 @@
 
   function getGridFromFirstHiddenLayerNode(node) {
     const weights = Object.values(node.weights);
+
+    // Transform each weight value
     // for (let weightIndex = 0; weightIndex < weights.length; weightIndex++) {
     //   weights[weightIndex] = 1 / (1 + Math.exp(-weights[weightIndex]));
     // }
-    return listToMatrix(weights, 28);
-  }
-  
 
-  function getGridFromNode(node) {
-    // const rows = [];
-    // for (let i = 0; i < node.weights.length)
+    return listToMatrix(weights, 28);
   }
 
   function showOutput(output) { // Display output layer values
@@ -52,10 +49,10 @@
     $('#test').html('')
     // const result = $('<div></div>');
     output.forEach((v, i) => {
-      const valueText = (Math.floor(v * 10000) / 100).toFixed(2) + '%';
+      const valueText = (Math.floor(v * 10000) / 100).toFixed(2) + ' %';
       // const template = $($('#outputTemplate').html())
       // template.text(`${i} ${valueText}`);
-      $('#test').append(`<br>&nbsp;${i}:&nbsp;&nbsp;&nbsp;${valueText}`)
+      $('#test').append(`${i > 0 ? '<br>' : ''}&nbsp;${i}:&nbsp;&nbsp;&nbsp;${valueText}`)
       // result.append(template);
     });
   }
@@ -94,7 +91,7 @@
     const digitPad = new DigitPad($('#digit'), {
       columns: 28,
       rows: 28,
-      cellSize: 10,
+      cellSize: 8,
       brushWidth: 14,
       onBegin: e => { digitPad.clear(); },
       onStroke: e => {
@@ -121,7 +118,7 @@
     const gridDisplay = new DigitPad($('#gridDisplay'), {
       columns: 28,
       rows: 28,
-      cellSize: 10,
+      cellSize: 8,
       brushWidth: 5,
       disablePad: true
     });
