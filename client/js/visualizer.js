@@ -10,7 +10,8 @@
 
     this.init = () => {
       // const width = window.innerWidth, height = window.innerHeight;
-      const width = $element.width(), height = $element.height();
+      const width = $element.width();
+      const height = width / (16 / 9) // $element.height();
       console.log('Initalizing visualizer with width:', width, 'height:', height);
 
       // renderer
@@ -44,9 +45,9 @@
       this.scene.add(new THREE.AxesHelper(200));
 
       // Geometry
-      var geometry = new THREE.SphereGeometry(1, 20, 10);
+      const geometry = new THREE.SphereGeometry(10, 20, 10);
       // material
-      var material = new THREE.MeshPhongMaterial({
+      const material = new THREE.MeshPhongMaterial({
         color: 0x33bbff,
         flatShading: true,
         transparent: true,
@@ -66,26 +67,36 @@
 
 
       // Mouse interaction
-      this.renderer.domElement.addEventListener('mousemove', e => {
-        this.mouse.x = ((e.clientX - $element.offset().left) / this.renderer.domElement.clientWidth) * 2 - 1;
-        this.mouse.y = - ((e.clientY - $element.offset().top) / this.renderer.domElement.clientHeight) * 2 + 1;
+      this.renderer.domElement.addEventListener('click', e => {
+        // Calculate mouse 2D position based on click and canvas position on document (accounting scroll)
+        const DOMRect = this.renderer.domElement.getBoundingClientRect();
+        this.mouse.x = ((e.clientX - DOMRect.left) / this.renderer.domElement.clientWidth) * 2 - 1;
+        this.mouse.y = - ((e.clientY - DOMRect.top) / this.renderer.domElement.clientHeight) * 2 + 1;
 
+        // Raycast from camera and check if it intersects something
         this.raycaster.setFromCamera(this.mouse, this.camera);
-
         const intersects = this.raycaster.intersectObjects(this.scene.children);
-        console.log('Mouse at', this.mouse, 'intersections:', intersects);
+        // console.log('Mouse at', this.mouse, 'intersections:', intersects);
 
         if (intersects.length > 0) {
           console.log('Intersection at', this.mouse, intersects[0]);
 
           // Test (draw line)
-          const material = new THREE.LineBasicMaterial( { color: 0x00ccff } );
-          const geometry = new THREE.BufferGeometry().setFromPoints([
-            this.raycaster.ray.origin,
-            intersects[0].point
-          ]);
-          const line = new THREE.Line( geometry, material );
-          this.scene.add( line );
+          // const material = new THREE.LineBasicMaterial( { color: 0x00ccff } );
+          // const geometry = new THREE.BufferGeometry().setFromPoints([
+          //   this.raycaster.ray.origin,
+          //   intersects[0].point
+          // ]);
+          // const line = new THREE.Line( geometry, material );
+          // this.scene.add( line );
+          
+          // Test (draw cube)
+          const geometry = new THREE.SphereGeometry(1, 40, 40);
+          const material = new THREE.MeshPhongMaterial({ color: 0x00eecc, transparent: true, opacity: 0.4, });
+          const testBall = new THREE.Mesh(geometry, material);
+          const point = intersects[0].point;
+          testBall.position.set(point.x, point.y, point.z);
+          this.scene.add(testBall);
         }
       });
     }
