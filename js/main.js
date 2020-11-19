@@ -52,18 +52,17 @@
   
 
   $(document).ready(async () => {
+    
+    // Load model from JSON file (created from Node.js side training)
+    const model = await fetch('model.json').then(res => res.json());
+    console.log('Fetched model:', model);
   
     // Structure neural network
     const net = new brain.NeuralNetwork(brain.NeuralNetwork, {
       hiddenLayers: [16, 16],
       activation: 'sigmoid'
     });
-    
-
-    // Load model from JSON file (created from Node.js side training)
-    const model = await fetch('model.json').then(res => res.json());
-    net.fromJSON(model);
-    console.log('Loaded model:', model);
+    net.fromJSON(model); // Load model into neural network
 
 
     // Initialize first hidden layer visualization grids
@@ -128,6 +127,7 @@
     });
     visualizer.init();
     visualizer.animate();
+    visualizer.loadModel(model); // Load model into visualizer
 
   });
 
