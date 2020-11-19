@@ -179,10 +179,11 @@
           // Highlight
           if (userData.layer) {
             $('#visualizationGrids .digit-pad canvas').removeClass('clicked');
+            $('#test span').removeClass('clicked');
             if (userData.layer === 1) {
               $('#visualizationGrids .digit-pad canvas').eq(userData.i).addClass('clicked');
             } else if (userData.layer === this.layers.length - 1) {
-              
+              $('#test span').eq(userData.i).addClass('clicked');
             }
           }
         }
@@ -321,6 +322,7 @@
       }
       this.resetWeights();
       $('#visualizationGrids .digit-pad canvas').removeClass('clicked');
+      $('#test span').removeClass('clicked');
     }
 
     this.showNodeWeights = (layer, nodeIndex) => {
