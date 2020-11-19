@@ -12,6 +12,7 @@
   const OUTPUT_LAYER_NODE_RADIUS = 15;
   const POSITIVE_WEIGHT_COLOR = [0, 204, 0];
   const NEGATIVE_WEIGHT_COLOR = [204, 0, 0];
+  const LAYER_DISTANCE = 200;
 
   CameraControls.install({ THREE: THREE });
 
@@ -21,6 +22,7 @@
     this.model = {};
     this.inputCells = [];
     this.layers = [];
+    this.layersWeights = [];
 
     this.init = () => {
       // const width = window.innerWidth, height = window.innerHeight;
@@ -57,7 +59,7 @@
       // this.scene.add(light);
 
       // Axes
-      this.scene.add(new THREE.AxesHelper(1000));
+      // this.scene.add(new THREE.AxesHelper(1000));
 
       // Test mesh
       // const geometry = new THREE.SphereGeometry(10, 20, 10);
@@ -143,16 +145,18 @@
         // console.log('Mouse at', this.mouse, 'intersections:', intersects);
 
         if (intersects.length > 0) {
-          const intersection = intersects.find(o => o.object.userData.layer !== undefined); // Has userData (not weight line)
+          const intersection = intersects.find(o => o.object.type == 'Mesh' && o.object.userData.layer && o.object.userData.layer !== 0); // Has userData (not weight line)
           if (!intersection) return;
 
-          console.log('Intersection at', this.mouse, intersects[0]);
+          console.log('Intersection with', intersection.object.type, 'at', this.mouse, intersection);
 
           const userData = intersects[0].object.userData;
           console.log('userData:', userData);
 
+          this.showNodeWeights(userData.layer, userData.i);
+
           // Test (paint input)
-          if (userData.layer === 0) this.layers[0][userData.row][userData.column].material.color.setHex(0x0000aa)
+          // if (userData.layer === 0) this.layers[0][userData.row][userData.column].material.color.setHex(0x0000aa)
 
           // Test (draw line)
           // const material = new THREE.LineBasicMaterial( { color: 0x00ccff } );
@@ -182,15 +186,18 @@
     // Excepts a model with 28*28 input nodes and 10 outputs nodes
     this.loadModel = (model) => {
       this.model = model;
-      const layerDistance = 350, xyCenter = XY_CENTER;
+      const layerDistance = LAYER_DISTANCE, xyCenter = XY_CENTER;
 
       // Load hidden and output layers
       for (let l = 1; l < model.layers.length; l++) { // Skip input layer (index 0)
         this.layers[l] = [];
+        this.layersWeights[l] = [];
 
         const nodes = Object.values(model.layers[l]);
         const rowCount = Math.ceil(Math.sqrt(nodes.length)); // (Visual) how many rows will the nodes be displayed with
         for (let n = 0; n < nodes.length; n++) {
+          this.layersWeights[l][n] = [];
+
           const isOutputLayer = l === model.layers.length - 1;
           const nodeMargin = !isOutputLayer ? HIDDEN_LAYER_NODE_MARGIN : OUTPUT_LAYER_NODE_MARGIN;
 
@@ -248,7 +255,7 @@
             const weightMaterial = new THREE.LineBasicMaterial({ 
               color: `rgb(${color[0] * 255}, ${color[1] * 255}, ${color[2] * 255})` ,
               transparent: true,
-              opacity: Math.min(value, 10)
+              opacity: 0.1 + Math.min(value, 10) * 0.9
             });
             
             const weightGeometry = new THREE.BufferGeometry().setFromPoints([point1, point2]);
@@ -257,17 +264,14 @@
               connection.visible = false;
             }
 
+            this.layersWeights[l][n][i] = connection;
             this.scene.add(connection);
           }
         }
       }
 
       console.log('Visualizer meshes:', this.layers)
-    }
-
-
-    this.getNode = (l, n) => {
-      return this.layers[l]
+      console.log('Visualizer weights:', this.layersWeights)
     }
 
 
@@ -303,6 +307,43 @@
           XY_CENTER, XY_CENTER, 300,         // Target/Focus (to look at)
           true
         )
+      }
+      this.resetWeights();
+    }
+
+    this.showNodeWeights = (layer, nodeIndex) => {
+      if (!layer || layer == 0) return;
+
+      this.hideWeights();
+
+      const nodeWeights = this.layersWeights[layer][nodeIndex];
+      console.log(nodeWeights);
+      for (let w = 0; w < nodeWeights.length; w++) {
+        nodeWeights[w].visible = true;
+      }
+    }
+
+    this.hideWeights = () => {
+      if (!this.layersWeights) return;
+
+      for (let l = 1; l < this.layersWeights.length; l++) {
+        for (let n = 0; n < this.layersWeights[l].length; n++) {
+          for (let w = 0; w < this.layersWeights[l][n].length; w++) {
+            this.layersWeights[l][n][w].visible = false;
+          }
+        }
+      }
+    }
+
+    this.resetWeights = () => {
+      if (!this.layersWeights) return;
+
+      for (let l = 1; l < this.layersWeights.length; l++) {
+        for (let n = 0; n < this.layersWeights[l].length; n++) {
+          for (let w = 0; w < this.layersWeights[l][n].length; w++) {
+            this.layersWeights[l][n][w].visible = l !== 1;
+          }
+        }
       }
     }
   }
