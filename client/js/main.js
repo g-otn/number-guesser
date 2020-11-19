@@ -91,6 +91,9 @@
         // Draw grid in digitPad (pixelated mirror of #digit)
         const grid = digitPad.getCenteredPositiveGrid(); // digitPad.getGrid();
         gridDisplay.drawGrid(grid);
+
+        // Draw grid in visualizer
+        visualizer.updateInputCells(grid)
         
         // Get input for neural network
         const input = getInputFromGrid(grid);
