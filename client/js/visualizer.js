@@ -5,14 +5,14 @@
 (() => {
 
   const OUTPUT_LAYER_NODE_MARGIN = 80;
-  const HIDDEN_LAYER_NODE_MARGIN = 70;
+  const HIDDEN_LAYER_NODE_MARGIN = 100;
   const INPUT_LAYER_PANEL_SIZE = 10;
   const XY_CENTER = (28 * INPUT_LAYER_PANEL_SIZE) / 2;
   const HIDDEN_LAYER_NODE_RADIUS = 10;
   const OUTPUT_LAYER_NODE_RADIUS = 15;
   const POSITIVE_WEIGHT_COLOR = [0, 204, 0];
   const NEGATIVE_WEIGHT_COLOR = [204, 0, 0];
-  const LAYER_DISTANCE = 200;
+  const LAYER_DISTANCE = 225;
 
   CameraControls.install({ THREE: THREE });
 
@@ -174,6 +174,17 @@
           // const point = intersects[0].point;
           // testBall.position.set(point.x, point.y, point.z);
           // this.scene.add(testBall);
+
+
+          // Highlight
+          if (userData.layer) {
+            $('#visualizationGrids .digit-pad canvas').removeClass('clicked');
+            if (userData.layer === 1) {
+              $('#visualizationGrids .digit-pad canvas').eq(userData.i).addClass('clicked');
+            } else if (userData.layer === this.layers.length - 1) {
+              
+            }
+          }
         }
       });
 
@@ -309,6 +320,7 @@
         )
       }
       this.resetWeights();
+      $('#visualizationGrids .digit-pad canvas').removeClass('clicked');
     }
 
     this.showNodeWeights = (layer, nodeIndex) => {
