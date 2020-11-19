@@ -60,6 +60,10 @@ hr {
   /* margin: 2px; */
 }
 
+#visualizationGrids .digit-pad canvas.clicked {
+  border: 2px solid lime;
+}
+
 @media screen and (min-width: 1540px) {
   .grids-container-block {
     width: 800px;
