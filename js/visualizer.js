@@ -8,6 +8,10 @@
   const HIDDEN_LAYER_NODE_MARGIN = 70;
   const INPUT_LAYER_PANEL_SIZE = 10;
   const XY_CENTER = (28 * INPUT_LAYER_PANEL_SIZE) / 2;
+  const HIDDEN_LAYER_NODE_RADIUS = 10;
+  const OUTPUT_LAYER_NODE_RADIUS = 15;
+  const POSITIVE_WEIGHT_COLOR = [0, 204, 0];
+  const NEGATIVE_WEIGHT_COLOR = [204, 0, 0];
 
   CameraControls.install({ THREE: THREE });
 
@@ -102,8 +106,8 @@
           })
           const inputCell = new THREE.Mesh(inputGeometry, inputMaterial);
           inputCell.position.set(
-            (cellSize * 28 - x * cellSize) + (HIDDEN_LAYER_NODE_MARGIN / 2), 
-            (cellSize * 28 - y * cellSize) + (HIDDEN_LAYER_NODE_MARGIN / 2), 
+            (cellSize * 28 - x * cellSize) + (HIDDEN_LAYER_NODE_MARGIN / 2),
+            (cellSize * 28 - y * cellSize) + (HIDDEN_LAYER_NODE_MARGIN / 2),
             0
           );
 
@@ -134,10 +138,14 @@
 
         // Raycast from camera and check if it intersects something
         this.raycaster.setFromCamera(this.mouse, this.camera);
+        // const allLayersNodes = this.layers[0].flat(1).concat(this.layers.splice(1).flat(1));
         const intersects = this.raycaster.intersectObjects(this.scene.children);
         // console.log('Mouse at', this.mouse, 'intersections:', intersects);
 
         if (intersects.length > 0) {
+          const intersection = intersects.find(o => o.object.userData.layer !== undefined); // Has userData (not weight line)
+          if (!intersection) return;
+
           console.log('Intersection at', this.mouse, intersects[0]);
 
           const userData = intersects[0].object.userData;
@@ -174,7 +182,7 @@
     // Excepts a model with 28*28 input nodes and 10 outputs nodes
     this.loadModel = (model) => {
       this.model = model;
-      const layerDistance = 350, xyCenter = XY_CENTER; 
+      const layerDistance = 350, xyCenter = XY_CENTER;
 
       // Load hidden and output layers
       for (let l = 1; l < model.layers.length; l++) { // Skip input layer (index 0)
@@ -187,7 +195,7 @@
           const nodeMargin = !isOutputLayer ? HIDDEN_LAYER_NODE_MARGIN : OUTPUT_LAYER_NODE_MARGIN;
 
           // Create node mesh
-          const geometry = new THREE.SphereGeometry(isOutputLayer ? 10 : 5, 40, 40);
+          const geometry = new THREE.SphereGeometry(isOutputLayer ? OUTPUT_LAYER_NODE_RADIUS : HIDDEN_LAYER_NODE_RADIUS, 40, 40);
           const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
           const node = new THREE.Mesh(geometry, material);
 
@@ -212,20 +220,52 @@
           }
           node.position.set(x, y, layerDistance * l);
 
-          
+
           // Store and add nodes to scene
           this.layers[l].push(node);
           this.scene.add(node);
 
 
-          // Create node weights mesh
+          // Create node weights
+          // Set position of each weight
+          const weights = Object.values(this.model.layers[l][n].weights)
+          for (let i = 0; i < weights.length; i++) {
+            let point1;
+            if (l - 1 === 0) {
+              const nodePosition = this.layers[0][Math.floor(i / 28)][i % 28].position;
+              point1 = new THREE.Vector3(nodePosition.x, nodePosition.y, nodePosition.z);
+            } else {
+              // console.log(l, i, this.layers[l - 1][i])
+              const nodePosition = this.layers[l - 1][i].position;
+              point1 = new THREE.Vector3(nodePosition.x, nodePosition.y, nodePosition.z);
+            }
+
+            const nodePosition = this.layers[l][n].position;
+            const point2 = new THREE.Vector3(nodePosition.x, nodePosition.y, nodePosition.z)
+            
+            const color = weights[i] > 0 ? POSITIVE_WEIGHT_COLOR : NEGATIVE_WEIGHT_COLOR;
+            const value = Math.log10(Math.abs(weights[i]));
+            const weightMaterial = new THREE.LineBasicMaterial({ 
+              color: `rgb(${color[0] * 255}, ${color[1] * 255}, ${color[2] * 255})` ,
+              transparent: true,
+              opacity: Math.min(value, 10)
+            });
+            
+            const weightGeometry = new THREE.BufferGeometry().setFromPoints([point1, point2]);
+            const connection = new THREE.Line(weightGeometry, weightMaterial);
+            if (l == 1) {
+              connection.visible = false;
+            }
+
+            this.scene.add(connection);
+          }
         }
       }
 
       console.log('Visualizer meshes:', this.layers)
     }
 
-    
+
     this.getNode = (l, n) => {
       return this.layers[l]
     }
