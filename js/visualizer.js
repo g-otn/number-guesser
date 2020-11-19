@@ -29,7 +29,7 @@
 
       // Scene
       this.scene = new THREE.Scene();
-      this.scene.background = new THREE.Color(`rgb(5, 5, 5)`);
+      this.scene.background = new THREE.Color(0x0f0f14);
 
       // Camera
       this.clock = new THREE.Clock();
@@ -67,6 +67,25 @@
 
 
       // Input layer meshes
+      this.loadInputLayer();
+
+      // Mouse interaction
+      this.loadEvents();
+    }
+
+
+    this.animate = () => {
+      const delta = this.clock.getDelta();
+      const hasControlsUpdated = this.cameraControls.update(delta);
+      requestAnimationFrame(this.animate);
+
+      // you can skip this condition to render though
+      // if (hasControlsUpdated) { renderer.render(scene, camera);}
+      this.renderer.render(this.scene, this.camera);
+    }
+
+
+    this.loadInputLayer = () => {
       const cellSize = 10;
       this.inputCells = [];
       for (let y = 0; y < 28; y++) {
@@ -100,8 +119,10 @@
           // console.log(inputCell.material.color)
         }
       }
+    }
 
-      // Mouse interaction
+
+    this.loadEvents = () => {
       this.renderer.domElement.addEventListener('click', e => {
         // Calculate mouse 2D position on canvas based on mouse click and canvas position on document (accounting document scroll)
         const DOMRect = this.renderer.domElement.getBoundingClientRect();
@@ -147,20 +168,9 @@
     }
 
 
-    this.animate = () => {
-      const delta = this.clock.getDelta();
-      const hasControlsUpdated = this.cameraControls.update(delta);
-      requestAnimationFrame(this.animate);
-
-      // you can skip this condition to render though
-      // if (hasControlsUpdated) { renderer.render(scene, camera);}
-      this.renderer.render(this.scene, this.camera);
-    }
-
-
     this.loadModel = (model) => {
       this.model = model;
-      const layerDistance = 50, xyCenter = 280 / 2; 
+      const layerDistance = 50, xyCenter = 280 / 2, nodeRowWidth = 10; 
 
       // Load hidden and output layers
       for (let l = 1; l < model.layers.length; l++) { // Skip input layer (index 0)
@@ -182,7 +192,7 @@
           };
 
           // Place node
-          
+          this.scene.add()
         }
       }
     }
