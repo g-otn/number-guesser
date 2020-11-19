@@ -11,8 +11,7 @@
     this.mouse = new THREE.Vector2(); // create once
     this.model = {};
     this.inputCells = [];
-    this.hiddenLayers = [];
-    this.outputLayer = [];
+    this.layers = [];
 
     this.init = () => {
       // const width = window.innerWidth, height = window.innerHeight;
@@ -40,8 +39,8 @@
       // Controls
       this.cameraControls = new CameraControls(this.camera, this.renderer.domElement);
       this.cameraControls.setLookAt(
-        -500, 280/2, -200,              // Position (to look from)
-        280 / 2, 280 / 2, 300         // Target/Focus (to look at)
+        -500, 280/2, -100,              // Position (to look from)
+        280 / 2, 280 / 2, 400         // Target/Focus (to look at)
       )
 
       // Ambient light
@@ -87,9 +86,9 @@
 
     this.loadInputLayer = () => {
       const cellSize = 10;
-      this.inputCells = [];
+      const inputCells = [];
       for (let y = 0; y < 28; y++) {
-        this.inputCells[y] = [];
+        inputCells[y] = [];
         for (let x = 0; x < 28; x++) {
           // Create mesh
           const inputGeometry = new THREE.PlaneBufferGeometry(cellSize, cellSize);
@@ -113,12 +112,14 @@
             column: x
           }
 
-          this.inputCells[y][x] = inputCell;
+          inputCells[y][x] = inputCell;
 
           this.scene.add(inputCell)
           // console.log(inputCell.material.color)
         }
       }
+
+      this.layers[0] = inputCells;
     }
 
 
@@ -140,7 +141,8 @@
           const userData = intersects[0].object.userData;
           console.log('userData:', userData);
 
-          this.inputCells[userData.row][userData.column].material.color.setHex(0x0000aa)
+          // Test (paint input)
+          if (userData.layer === 0) this.layers[0][userData.row][userData.column].material.color.setHex(0x0000aa)
 
           // Test (draw line)
           // const material = new THREE.LineBasicMaterial( { color: 0x00ccff } );
@@ -167,32 +169,48 @@
       });
     }
 
-
+    // Excepts a model with 28*28 input nodes and 10 outputs nodes
     this.loadModel = (model) => {
       this.model = model;
-      const layerDistance = 50, xyCenter = 280 / 2, nodeRowWidth = 10; 
+      const layerDistance = 350, xyCenter = 280 / 2; 
 
       // Load hidden and output layers
       for (let l = 1; l < model.layers.length; l++) { // Skip input layer (index 0)
-        const layer = model.layers[l];
-        console.log('layer', l, layer)
-        const rowCount = Math.ceil(Math.sqrt(layer)); // (Visual) how many rows will the nodes be displayed with
-
-        const nodes = Object.values(layer);
+        const nodes = Object.values(model.layers[l]);
+        const rowCount = Math.ceil(Math.sqrt(nodes.length)); // (Visual) how many rows will the nodes be displayed with
+        console.log('')
         for (let n = 0; n < nodes.length; n++) {
+          const isOutputLayer = l === model.layers.length - 1;
+          const nodeMargin = !isOutputLayer ? 70 : 80;
+
           // Create node mesh
-          const geometry = new THREE.SphereGeometry(20, 40, 40);
-          const material = new THREE.MeshPhongMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, });
+          const geometry = new THREE.SphereGeometry(isOutputLayer ? 10 : 5, 40, 40);
+          const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
           const node = new THREE.Mesh(geometry, material);
+
   
           // Add custom data
           node.userData = {
             layer: l,
-            i: n
+            i: n,
           };
 
-          // Place node
-          this.scene.add()
+          // Calculate position
+          let x, y;
+          if (!isOutputLayer) { // Hidden layers
+            const xyTopRight = xyCenter + (nodeMargin * rowCount) / 2;
+            const row = n % rowCount, column = Math.floor(n / rowCount);
+            x = xyTopRight - row * nodeMargin;
+            y = xyTopRight - column * nodeMargin;
+          } else {                             // Output layers
+            const right = xyCenter + (nodeMargin * nodes.length) / 2; // Position of most right output layer node
+            const visualColumn = n;
+            x = right - nodeMargin * visualColumn;
+            y = xyCenter;
+          }
+          node.position.set(x, y, layerDistance * l);
+
+          this.scene.add(node)
         }
       }
     }
@@ -204,8 +222,8 @@
       for (let y = 0; y < 28; y++) {
         for (let x = 0; x < 28; x++) {
           const grayValue = grid[y][x];
-          this.inputCells[y][x].material.color.setRGB(grayValue, grayValue, grayValue);
-          this.inputCells[y][x].userData.value = grid[y][x];
+          this.layers[0][y][x].material.color.setRGB(grayValue, grayValue, grayValue);
+          this.layers[0][y][x].userData.value = grid[y][x];
         }
       }
     }
