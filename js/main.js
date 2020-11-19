@@ -78,6 +78,16 @@
       
     }
 
+  
+    // Initialize three.js visualizer
+    const visualizer = new Visualizer($('#visualizer'), {
+      width: window.innerWidth,
+      height: 400
+    });
+    visualizer.init();
+    visualizer.animate();
+    visualizer.loadModel(model); // Load model into visualizer
+
 
     // Initialize digit pad
     const digitPad = new DigitPad($('#digit'), {
@@ -97,13 +107,15 @@
         // Get input for neural network
         const input = getInputFromGrid(grid);
 
-        // Get prediction from neural network
-        const prediction = net.run(input);
-        console.info('Prediction:', prediction);
+        // Get activations from neural network (library normally returns only prediction (output layer), but modified version returns all layers)
+        const activations = net.run(input);
 
-        // Display prediction
+        // Update visualizer activations
+        visualizer.updateActivations(activations);
+
+        // Update output layer text
         const outputLayerIndex = model.sizes.length - 1;
-        showOutput(prediction[outputLayerIndex]);
+        showOutput(activations[outputLayerIndex]);
       }
     });
     digitPad.init();
@@ -118,16 +130,6 @@
       disablePad: true
     });
     gridDisplay.init();
-
-  
-    // Initialize three.js visualizer
-    const visualizer = new Visualizer($('#visualizer'), {
-      width: window.innerWidth,
-      height: 400
-    });
-    visualizer.init();
-    visualizer.animate();
-    visualizer.loadModel(model); // Load model into visualizer
 
   });
 

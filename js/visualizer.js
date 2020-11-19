@@ -4,6 +4,11 @@
 */
 (() => {
 
+  const OUTPUT_LAYER_NODE_MARGIN = 80;
+  const HIDDEN_LAYER_NODE_MARGIN = 70;
+  const INPUT_LAYER_PANEL_SIZE = 10;
+  const XY_CENTER = (28 * INPUT_LAYER_PANEL_SIZE) / 2;
+
   CameraControls.install({ THREE: THREE });
 
   function Visualizer($element) {
@@ -38,10 +43,7 @@
 
       // Controls
       this.cameraControls = new CameraControls(this.camera, this.renderer.domElement);
-      this.cameraControls.setLookAt(
-        -500, 280/2, -100,              // Position (to look from)
-        280 / 2, 280 / 2, 400         // Target/Focus (to look at)
-      )
+      this.resetCamera();
 
       // Ambient light
       this.scene.add(new THREE.AmbientLight(0xffffff));
@@ -100,8 +102,8 @@
           })
           const inputCell = new THREE.Mesh(inputGeometry, inputMaterial);
           inputCell.position.set(
-            (cellSize * 28 - x * cellSize), 
-            (cellSize * 28 - y * cellSize), 
+            (cellSize * 28 - x * cellSize) + (HIDDEN_LAYER_NODE_MARGIN / 2), 
+            (cellSize * 28 - y * cellSize) + (HIDDEN_LAYER_NODE_MARGIN / 2), 
             0
           );
 
@@ -172,23 +174,23 @@
     // Excepts a model with 28*28 input nodes and 10 outputs nodes
     this.loadModel = (model) => {
       this.model = model;
-      const layerDistance = 350, xyCenter = 280 / 2; 
+      const layerDistance = 350, xyCenter = XY_CENTER; 
 
       // Load hidden and output layers
       for (let l = 1; l < model.layers.length; l++) { // Skip input layer (index 0)
+        this.layers[l] = [];
+
         const nodes = Object.values(model.layers[l]);
         const rowCount = Math.ceil(Math.sqrt(nodes.length)); // (Visual) how many rows will the nodes be displayed with
-        console.log('')
         for (let n = 0; n < nodes.length; n++) {
           const isOutputLayer = l === model.layers.length - 1;
-          const nodeMargin = !isOutputLayer ? 70 : 80;
+          const nodeMargin = !isOutputLayer ? HIDDEN_LAYER_NODE_MARGIN : OUTPUT_LAYER_NODE_MARGIN;
 
           // Create node mesh
           const geometry = new THREE.SphereGeometry(isOutputLayer ? 10 : 5, 40, 40);
           const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
           const node = new THREE.Mesh(geometry, material);
 
-  
           // Add custom data
           node.userData = {
             layer: l,
@@ -210,9 +212,22 @@
           }
           node.position.set(x, y, layerDistance * l);
 
-          this.scene.add(node)
+          
+          // Store and add nodes to scene
+          this.layers[l].push(node);
+          this.scene.add(node);
+
+
+          // Create node weights mesh
         }
       }
+
+      console.log('Visualizer meshes:', this.layers)
+    }
+
+    
+    this.getNode = (l, n) => {
+      return this.layers[l]
     }
 
 
@@ -229,12 +244,23 @@
     }
 
 
+    this.updateActivations = (activations) => {
+      console.info('Updating nodes with activations:', activations);
+      for (let l = 1; l < this.layers.length /* activations.length */; l++) {
+        for (let n = 0; n < this.layers[l].length; n++) {
+          const activation = activations[l][n];
+          this.layers[l][n].material.color.setRGB(activation, activation, activation);
+        }
+      }
+    }
+
+
     // Reset camera position and focus
     this.resetCamera = () => {
       if (this.cameraControls) {
         this.cameraControls.setLookAt(
-          -500, 280/2, -200,            // Position (to look from)
-          280 / 2, 280 / 2, 300,         // Target/Focus (to look at)
+          -500, XY_CENTER, -200,            // Position (to look from)
+          XY_CENTER, XY_CENTER, 300,         // Target/Focus (to look at)
           true
         )
       }
