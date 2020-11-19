@@ -45,7 +45,7 @@
       const valueText = (Math.floor(v * 10000) / 100).toFixed(2) + ' %';
       // const template = $($('#outputTemplate').html())
       // template.text(`${i} ${valueText}`);
-      $('#test').append(`${i > 0 ? '<br>' : ''}&nbsp;${i}:&nbsp;&nbsp;&nbsp;${valueText}`)
+      $('#test').append(`${i > 0 ? '<br>' : ''}<span>&nbsp;${i}:&nbsp;&nbsp;&nbsp;${valueText}</span>`)
       // result.append(template);
     });
   }

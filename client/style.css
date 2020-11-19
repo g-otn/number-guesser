@@ -43,6 +43,11 @@ hr {
   text-align: left;
 }
 
+#test span.clicked {
+  color: lime;
+  font-weight: bold;
+}
+
 #visualizationGrids {
   display: inline-block;
   /* padding: 8px; */
