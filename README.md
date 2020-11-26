@@ -58,7 +58,7 @@ Because of hard-coded code, and since it's using a poorly [modified version](cli
 This repo was highly motivated by [3Blue1Brown](https://www.youtube.com/c/3blue1brown)'s [videos on Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi).
 
 Most of the training code was based on [Ralph's Blog](https://golb.hplar.ch) article 
-on "[Machine Learning with brain.js and Tensorflow.js]((https://golb.hplar.ch/2019/01/machine-learning-with-brain-and-tensorflow-js.html))".
+on "[Machine Learning with brain.js and Tensorflow.js](https://golb.hplar.ch/2019/01/machine-learning-with-brain-and-tensorflow-js.html)".
 
 Thanks to MSc Adriana Natividad Lopez Valverde for assigning me the project related to this repo.
 
