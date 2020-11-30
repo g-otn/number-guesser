@@ -1,4 +1,4 @@
-# number-guesser
+# [number-guesser](https://g-otn.github.io/number-guesser/)
 
 This repo holds the code to train a simple digit recognizing feed foward neural network
 with [the MNIST database](http://yann.lecun.com/exdb/mnist/) digits and also [a website](https://g-otn.github.io/number-guesser) which allows the user to draw digits and visualize
