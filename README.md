@@ -4,6 +4,15 @@ This repo holds the code to train a simple digit recognizing feed foward neural 
 with [the MNIST database](http://yann.lecun.com/exdb/mnist/) digits and also [a website](https://g-otn.github.io/number-guesser) which allows the user to draw digits and visualize
 the neural network prediction of the drawings.
 
+<p align="center">
+   <img src="https://user-images.githubusercontent.com/44736064/100669492-3c709e80-333c-11eb-9b54-540d844f4eda.gif">
+</p>
+
+### Usage
+- Draw digit on the "Digit" canvas
+- Click on node to highlight it's weights
+- <kbd>Space</kbd> to reset weights and camera
+
 ## Installation
 
 First, clone the repository: 
