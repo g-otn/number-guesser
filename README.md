@@ -11,6 +11,7 @@ the neural network prediction of the drawings.
 ### Usage
 - Draw digit on the "Digit" canvas
 - Click on node to highlight it's weights
+- Check [table](https://github.com/yomotsu/camera-controls#examples) for camera controls in the 3D visualizer
 - <kbd>Space</kbd> to reset weights and camera
 
 ## Installation
